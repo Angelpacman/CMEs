@@ -17,7 +17,7 @@ import sys
 #############################################################
 
 # Ordenar (por nombre) los archivos en una lista para posterior consulta
-pathToFiles = '../DATA'
+pathToFiles = "../DATA"
 orderedList = sorted(glob.glob(os.path.join(pathToFiles, '*.fts')))
 contador=0
 for filename in orderedList:
@@ -73,7 +73,6 @@ def diff(files):
       fig = plt.figure(figsize=(19.2,14.4))
       ax = fig.add_subplot(1, 1, 1)
       im, norm = imshow_norm(imag_diff, ax, origin='lower',
-                            #cmap='jet_r',
                             cmap='CMRmap_r',
                             interval=MinMaxInterval(),
                             stretch=HistEqStretch(normalized_data))
@@ -99,8 +98,6 @@ def diff(files):
     'ffmpeg', '-framerate', '4', '-i', 'file%02d.png', '-r', '30', '-pix_fmt', 'yuv420p',
     'video_name.mp4'
   ])
-
-
 
   #return fig
 
