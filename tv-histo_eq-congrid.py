@@ -82,7 +82,6 @@ def diff(files):
       fig.colorbar(im)
       plt.close(fig)
       fig.savefig(pathToFiles + "/file%02d.png" % i)
-      #fig.savefig(pathToFiles + "/file%02d.png" % i, bbox_inches = 'tight')
 
       # Mostrar porcentaje de avance en consola
       j = (i + 1) / (n-1)
@@ -99,8 +98,7 @@ def diff(files):
     'video_name.mp4'
   ])
 
-  #return fig
-
+#return fig
 datos_diff = diff(listaDatos)
 print("\nPrograma Completado")
 
