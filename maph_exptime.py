@@ -43,3 +43,16 @@ for i in range(40):
         cel.append(headerList[headerInplace])
     maph.loc[i]=cel
     cel=[]
+
+#############################################################
+
+# Filtro por tiempo de esposicion
+tama=len(listaDatos)
+expTime=maph.EXPTIME
+mExpTime=np.mean(expTime)
+maph[maph.EXPTIME>=mExpTime-1.5][maph.EXPTIME<=mExpTime+1.5]
+
+# Filtro con Desviacion estandard
+stdExpTime=np.std(maph.EXPTIME)
+stdExpTime
+maph[maph.EXPTIME>=(mExpTime-stdExpTime)][maph.EXPTIME<=(mExpTime+stdExpTime)]
