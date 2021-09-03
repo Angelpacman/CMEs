@@ -29,3 +29,17 @@ for filename in orderedList:
   else:
     break
 print("\nDe los cuales {} son  de tamaño 2048 x 2048".format(len(listaDatos)))
+
+#############################################################
+
+# make Dataframe
+maph=pd.DataFrame(columns=headerList)
+cel =[]
+for i in range(40):
+    hdulist1 = fits.open(listaDatos[i])
+    headerList = hdulist1[0].header
+    hdulist1.close()
+    for headerInplace in headerList:
+        cel.append(headerList[headerInplace])
+    maph.loc[i]=cel
+    cel=[]
