@@ -32,8 +32,13 @@ print("\nDe los cuales {} son  de tamaño 2048 x 2048".format(len(listaDatos)))
 
 #############################################################
 
-# make Dataframe
+# make Dataframe with headers
+hdulist1 = fits.open(listaDatos[0])
+headerList = hdulist1[0].header
+hdulist1.close()
 maph=pd.DataFrame(columns=headerList)
+
+# fill Dataframe
 cel =[]
 for i in range(40):
     hdulist1 = fits.open(listaDatos[i])
@@ -41,18 +46,19 @@ for i in range(40):
     hdulist1.close()
     for headerInplace in headerList:
         cel.append(headerList[headerInplace])
-    maph.loc[i]=cel
+    maph.loc[i] = cel
     cel=[]
 
 #############################################################
 
-# Filtro por tiempo de esposicion
-tama=len(listaDatos)
-expTime=maph.EXPTIME
-mExpTime=np.mean(expTime)
-maph[maph.EXPTIME>=mExpTime-1.5][maph.EXPTIME<=mExpTime+1.5]
+# Filtro por tiempo de exsposicion
+tama = len(listaDatos)
+expTime = maph.EXPTIME
+mExpTime = np.mean(expTime)
+maph_tem = maph[maph.EXPTIME>=mExpTime-1.5][maph.EXPTIME<=mExpTime+1.5]
 
 # Filtro con Desviacion estandard
-stdExpTime=np.std(maph.EXPTIME)
+stdExpTime = np.std(maph.EXPTIME)
 stdExpTime
-maph[maph.EXPTIME>=(mExpTime-stdExpTime)][maph.EXPTIME<=(mExpTime+stdExpTime)]
+maph_tem = maph[(maph.EXPTIME>=(mExpTime-stdExpTime)) & (maph.EXPTIME<=(mExpTime+stdExpTime))]
+maph_tem.info()
