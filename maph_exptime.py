@@ -60,3 +60,10 @@ maph_tem = maph[maph.EXPTIME >= mExpTime - 1.5][maph.EXPTIME <= mExpTime + 1.5]
 stdExpTime = np.std(maph.EXPTIME)
 maph_tem = maph[(maph.EXPTIME >= (mExpTime - stdExpTime)) & (maph.EXPTIME <= (mExpTime + stdExpTime))]
 maph_tem.info()
+
+#############################################################
+
+mitad=1 #esto es para elegir el tamaño de la imagen 2 -> 512; 1 -> 1024
+xc=maph.loc[0].CRPIX1/mitad
+yc=maph.loc[0].CRPIX2/mitad
+xc
