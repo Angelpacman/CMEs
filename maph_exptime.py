@@ -76,3 +76,14 @@ for i in maph:
         print("RSUN existe")
 
 #############################################################
+
+for header in maph:
+    if header == 'R_SUN':
+        r0=maph.loc[0].R_SUN/(maph.loc[0].CDELT1*mitad)
+    elif header == 'RSUN':
+        r0=maph.loc[0].RSUN/(maph.loc[0].CDELT1*mitad)
+
+r0_20=20.*r0
+r0_19=19.*r0
+r0_15=15.*r0
+r0_10=10.*r0
