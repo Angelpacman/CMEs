@@ -112,3 +112,8 @@ delta = []
 for celda in tiempos:
     delta.append((celda - t0).total_seconds())
 delta
+
+#############################################################
+
+df_tiempo['SECONDS'] = delta
+df_tiempo
