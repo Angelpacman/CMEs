@@ -94,3 +94,12 @@ print("r0_20 = {}".format(r0_20))
 print("r0_19 = {}".format(r0_19))
 print("r0_15 = {}".format(r0_15))
 print("r0_10 = {}".format(r0_10))
+
+#############################################################
+
+import datetime
+#df_tiempo=pd.to_datetime(maph['DATE-OBS'])
+tiempos = [maph['DATE-OBS']]
+header = ["DATE-OBS"]
+df_tiempo = pd.concat(tiempos, axis = 1, keys = header)
+df_tiempo.head()
