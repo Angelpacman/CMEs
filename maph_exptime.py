@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 
 # Ordenar (por nombre) los archivos en una lista para posterior consulta
 pathToFiles = "../DATA"
+#pathToFiles = "DATA"
 orderedList = sorted(glob.glob(os.path.join(pathToFiles, '*.fts')))
 contador = 0
 for filename in orderedList:
