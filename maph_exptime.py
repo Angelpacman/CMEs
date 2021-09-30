@@ -88,8 +88,6 @@ r0_19=19.*r0
 r0_15=15.*r0
 r0_10=10.*r0
 
-#############################################################
-
 print("r0_20 = {}".format(r0_20))
 print("r0_19 = {}".format(r0_19))
 print("r0_15 = {}".format(r0_15))
@@ -111,9 +109,9 @@ t0 = tiempos[0] # Esto fallará si se filtro el FITfile con el indice 0
 delta = []
 for celda in tiempos:
     delta.append((celda - t0).total_seconds())
-delta
+print("delta = {}".format(delta))
 
 #############################################################
 
 df_tiempo['SECONDS'] = delta
-df_tiempo
+df_tiempo.head()
