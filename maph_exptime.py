@@ -74,3 +74,44 @@ for i in maph:
         print("R_SUN existe")
     elif i == 'RSUN':
         print("RSUN existe")
+
+#############################################################
+
+for header in maph:
+    if header == 'R_SUN':
+        r0=maph.loc[0].R_SUN/(maph.loc[0].CDELT1*mitad)
+    elif header == 'RSUN':
+        r0=maph.loc[0].RSUN/(maph.loc[0].CDELT1*mitad)
+
+r0_20=20.*r0
+r0_19=19.*r0
+r0_15=15.*r0
+r0_10=10.*r0
+
+print("r0_20 = {}".format(r0_20))
+print("r0_19 = {}".format(r0_19))
+print("r0_15 = {}".format(r0_15))
+print("r0_10 = {}".format(r0_10))
+
+#############################################################
+
+import datetime
+#df_tiempo=pd.to_datetime(maph['DATE-OBS'])
+tiempos = [maph['DATE-OBS']]
+header = ["DATE-OBS"]
+df_tiempo = pd.concat(tiempos, axis = 1, keys = header)
+df_tiempo.head()
+
+#############################################################
+
+tiempos=pd.to_datetime(df_tiempo['DATE-OBS'])
+t0 = tiempos[0] # Esto fallará si se filtro el FITfile con el indice 0
+delta = []
+for celda in tiempos:
+    delta.append((celda - t0).total_seconds())
+print("delta = {}".format(delta))
+
+#############################################################
+
+df_tiempo['SECONDS'] = delta
+df_tiempo.head()
