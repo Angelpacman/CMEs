@@ -103,3 +103,12 @@ tiempos = [maph['DATE-OBS']]
 header = ["DATE-OBS"]
 df_tiempo = pd.concat(tiempos, axis = 1, keys = header)
 df_tiempo.head()
+
+#############################################################
+
+tiempos=pd.to_datetime(df_tiempo['DATE-OBS'])
+t0 = tiempos[0] # Esto fallará si se filtro el FITfile con el indice 0
+delta = []
+for celda in tiempos:
+    delta.append((celda - t0).total_seconds())
+delta
