@@ -97,7 +97,7 @@ def diff(files):
         'ffmpeg', '-framerate', '4', '-i', 'file%02d.png', '-r', '30', '-pix_fmt', 'yuv420p',
         'video_name.mp4'
     ])
-
+    os.chdir("../")
 
 # return fig
 datos_diff = diff(listaDatos)
