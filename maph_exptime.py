@@ -120,3 +120,12 @@ print("delta = {}".format(delta))
 
 df_tiempo['SECONDS'] = delta
 df_tiempo.head()
+
+#############################################################
+
+# Funcion para replicar funciond FLTARR de IDL
+def fltarr(a,b,c):
+    """
+    FLTARR(a, b, c)    -> np.zeros((c, b, a))
+    """
+    return np.zeros((c,b,a))
