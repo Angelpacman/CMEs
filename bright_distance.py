@@ -51,3 +51,23 @@ for i in range(len(listaDatos)):
         cel.append(headerList[headerInplace])
     maph.loc[i]=cel
     cel=[]
+
+# Filtrar lista de datos
+expTime=maph.EXPTIME
+mExpTime=np.mean(expTime)
+stdExpTime=np.std(maph.EXPTIME)
+#maph = maph[(maph.EXPTIME >= (mExpTime - stdExpTime)) & (maph.EXPTIME <= (mExpTime + stdExpTime))]
+maph = maph[(maph.EXPTIME >= (mExpTime - 1.5)) & (maph.EXPTIME <= (mExpTime + 1.5))]
+tama = len(maph)
+listaDatosFiltrados = []
+
+for fit_index in maph.index:
+    listaDatosFiltrados.append(listaDatos[fit_index])
+
+mapa = []
+
+for fit in listaDatosFiltrados:
+    hdulist = fits.open(fit)
+    datatemp = hdulist[0].data
+    hdulist.close()
+    mapa.append(datatemp)
