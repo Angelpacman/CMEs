@@ -161,3 +161,22 @@ def setAngle(angulo, ang_inc, gap):
             rr[j+gap][0][i]=x
             rr[j+gap][1][i]=y
     return rr
+
+# bosquejo
+rr = setAngle(80,3,5)
+print(rr.shape)
+for i in np.arange(len(rr)):
+    plt.plot(rr[i,0,:],rr[i,1,:])
+#plt.xlim([0,2040])
+#plt.ylim([750,1600])
+plt.scatter(xc, yc, s=2*maph.RSUN.iloc[30], facecolors='none', edgecolors='b')
+plt.grid()
+plt.show()
+
+#librerias para iterar colores xd
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
+import matplotlib.cm as mplcm
+import matplotlib.colors as colors
+#dar formato a las fechas en formato datatime
+from matplotlib import dates as mpl_dates
