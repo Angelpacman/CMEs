@@ -180,3 +180,36 @@ import matplotlib.cm as mplcm
 import matplotlib.colors as colors
 #dar formato a las fechas en formato datatime
 from matplotlib import dates as mpl_dates
+
+# radio central PA analizado en el tiempo
+fig = plt.figure(figsize = (18,6))
+ax = fig.add_subplot(1, 1, 1)
+dic_radios={}
+
+NUM_COLORS = 100
+cm = plt.get_cmap('gnuplot2_r')
+cNorm  = colors.Normalize(vmin=0, vmax=NUM_COLORS-1)
+scalarMap = mplcm.ScalarMappable(norm=cNorm, cmap=cm)
+
+for radio in range(0,n_puntos,5):
+    valorRadioCentral = np.array([])
+    for indice in range(len(listaDatosFiltrados)):
+        map = map_s[indice]
+        valorRadioCentral = np.append(valorRadioCentral, [ map[ rr[len(rr)//2, 1, radio], rr[len(rr)//2, 0, radio] ] ])
+    brilloProm = np.mean(valorRadioCentral)
+    valorRadioCentral = valorRadioCentral - brilloProm
+    dic_radios["radio_No.%s" %radio]=valorRadioCentral
+
+    #iteración de colores
+    ax.set_prop_cycle(color=[scalarMap.to_rgba(radio)])
+    ax.plot_date(tiempos, dic_radios["radio_No.%s" %radio], linestyle='solid',label='Punto %s' %radio)
+    #plt.xticks(rotation=45,  ha='right')
+
+date_format = mpl_dates.DateFormatter('%H:%M \n%d-%b-%Y')
+plt.gca().xaxis.set_major_formatter(date_format)
+ax.grid(color = "#242326")
+ax.legend(ncol=2)
+ax.set_facecolor('black')
+plt.ylabel("Brillo - $\mu_b$")
+plt.title("$Brillo - \mu_{brillo}$ vs Tiempo (en la dirección central PA del cono)")
+plt.show()
