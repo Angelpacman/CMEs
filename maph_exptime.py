@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 #############################################################
 
 # Ordenar (por nombre) los archivos en una lista para posterior consulta
-pathToFiles = "../DATA"
+#pathToFiles = "../DATA"
+pathToFiles = "DATA"
 orderedList = sorted(glob.glob(os.path.join(pathToFiles, '*.fts')))
 contador = 0
 for filename in orderedList:
@@ -66,6 +67,8 @@ maph_tem.info()
 mitad=1 #esto es para elegir el tamaño de la imagen 2 -> 512; 1 -> 1024
 xc=maph.loc[0].CRPIX1/mitad
 yc=maph.loc[0].CRPIX2/mitad
+print("xc = {}".format(xc))
+print("yc = {}".format(yc))
 
 #############################################################
 
@@ -87,9 +90,9 @@ r0_20=20.*r0
 r0_19=19.*r0
 r0_15=15.*r0
 r0_10=10.*r0
-
-#############################################################
-
+print("RSUN = {}".format(maph.loc[0].RSUN))
+print("CDELT1 = {}".format(maph.loc[0].CDELT1))
+print("r0 = {}\n".format(r0))
 print("r0_20 = {}".format(r0_20))
 print("r0_19 = {}".format(r0_19))
 print("r0_15 = {}".format(r0_15))
@@ -111,9 +114,18 @@ t0 = tiempos[0] # Esto fallará si se filtro el FITfile con el indice 0
 delta = []
 for celda in tiempos:
     delta.append((celda - t0).total_seconds())
-delta
+print("delta = {}".format(delta))
 
 #############################################################
 
 df_tiempo['SECONDS'] = delta
-df_tiempo
+df_tiempo.head()
+
+#############################################################
+
+# Funcion para replicar funciond FLTARR de IDL
+def fltarr(a,b,c):
+    """
+    FLTARR(a, b, c)    -> np.zeros((c, b, a))
+    """
+    return np.zeros((c,b,a))
