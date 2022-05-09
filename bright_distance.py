@@ -75,3 +75,32 @@ for fit in listaDatosFiltrados:
 
 #Suavizar mapa conf filtro
 map_s = ndimage.uniform_filter(mapa, size=3, mode='reflect')
+
+# Obtener constantes de los fits
+mitad=1 #esto es para elegir el tamaño de la imagen 2 -> 512; 1 -> 1024
+xc=maph.loc[0].CRPIX1/mitad
+yc=maph.loc[0].CRPIX2/mitad
+print("xc = {}".format(xc))
+print("yc = {}".format(yc))
+
+for i in maph:
+    if i == 'R_SUN':
+        print("R_SUN existe")
+    elif i == 'RSUN':
+        print("RSUN existe")
+
+for header in maph:
+    if header == 'R_SUN':
+        r0=maph.loc[0].R_SUN/(maph.loc[0].CDELT1*mitad)
+    elif header == 'RSUN':
+        r0=maph.loc[0].RSUN/(maph.loc[0].CDELT1*mitad)
+
+r0_20=20.*r0
+r0_19=19.*r0
+r0_15=15.*r0
+r0_10=10.*r0
+
+print("r0_20 = {}".format(r0_20))
+print("r0_19 = {}".format(r0_19))
+print("r0_15 = {}".format(r0_15))
+print("r0_10 = {}".format(r0_10))
