@@ -71,3 +71,7 @@ for fit in listaDatosFiltrados:
     datatemp = hdulist[0].data
     hdulist.close()
     mapa.append(datatemp)
+
+
+#Suavizar mapa conf filtro
+map_s = ndimage.uniform_filter(mapa, size=3, mode='reflect')
