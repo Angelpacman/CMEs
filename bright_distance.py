@@ -123,3 +123,93 @@ for celda in tiempos:
 
 df_tiempo['SECONDS'] = delta
 df_tiempo.head()
+
+# Definiendo el cono
+dx = maph.loc[0]['CDELT1']*1
+n_puntos=100
+ang_inc=3.0
+print('centro = {}, {}'.format(xc,yc))
+
+# Distancia de las direcciones del con en radios Solares
+if maph.loc[0].DETECTOR == 'COR2': #para stereo
+    rrin=3
+    rrfin=15
+else:
+    rrin=6
+    rrfin=15
+rrin
+
+# Funcion para generar rr (dibujo de las direcciones del cono)
+def setAngle(angulo, ang_inc, gap):
+    gap_angle = np.arange(gap*(-1),gap+1)
+    rr=rrt=np.zeros((1+gap*2,2,n_puntos),dtype=int)
+    PA_m = angulo + 90
+    rsol = r0
+    index = np.arange(100)
+    rads = np.linspace(rrin,rrfin,100)
+    radios = np.zeros(n_puntos)
+    for j in gap_angle:
+        for i in index:
+            rd = rads[i]
+            radios[i] = rd
+            radio=rsol * rd
+            teta = (PA_m + ang_inc * j)*np.pi/180
+            x = radio * np.cos(teta) + xc
+            y = radio * np.sin(teta) + yc
+            if x < 0 or y < 0:
+                print(i, x, y)
+            rr[j+gap][0][i]=x
+            rr[j+gap][1][i]=y
+    return rr
+
+# bosquejo
+rr = setAngle(80,3,5)
+print(rr.shape)
+for i in np.arange(len(rr)):
+    plt.plot(rr[i,0,:],rr[i,1,:])
+#plt.xlim([0,2040])
+#plt.ylim([750,1600])
+plt.scatter(xc, yc, s=2*maph.RSUN.iloc[30], facecolors='none', edgecolors='b')
+plt.grid()
+plt.show()
+
+#librerias para iterar colores xd
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
+import matplotlib.cm as mplcm
+import matplotlib.colors as colors
+#dar formato a las fechas en formato datatime
+from matplotlib import dates as mpl_dates
+
+# radio central PA analizado en el tiempo
+fig = plt.figure(figsize = (18,6))
+ax = fig.add_subplot(1, 1, 1)
+dic_radios={}
+
+NUM_COLORS = 100
+cm = plt.get_cmap('gnuplot2_r')
+cNorm  = colors.Normalize(vmin=0, vmax=NUM_COLORS-1)
+scalarMap = mplcm.ScalarMappable(norm=cNorm, cmap=cm)
+
+for radio in range(0,n_puntos,5):
+    valorRadioCentral = np.array([])
+    for indice in range(len(listaDatosFiltrados)):
+        map = map_s[indice]
+        valorRadioCentral = np.append(valorRadioCentral, [ map[ rr[len(rr)//2, 1, radio], rr[len(rr)//2, 0, radio] ] ])
+    brilloProm = np.mean(valorRadioCentral)
+    valorRadioCentral = valorRadioCentral - brilloProm
+    dic_radios["radio_No.%s" %radio]=valorRadioCentral
+
+    #iteración de colores
+    ax.set_prop_cycle(color=[scalarMap.to_rgba(radio)])
+    ax.plot_date(tiempos, dic_radios["radio_No.%s" %radio], linestyle='solid',label='Punto %s' %radio)
+    #plt.xticks(rotation=45,  ha='right')
+
+date_format = mpl_dates.DateFormatter('%H:%M \n%d-%b-%Y')
+plt.gca().xaxis.set_major_formatter(date_format)
+ax.grid(color = "#242326")
+ax.legend(ncol=2)
+ax.set_facecolor('black')
+plt.ylabel("Brillo - $\mu_b$")
+plt.title("$Brillo - \mu_{brillo}$ vs Tiempo (en la dirección central PA del cono)")
+plt.show()
