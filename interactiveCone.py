@@ -127,3 +127,44 @@ df_tiempo.head()
 dx = maph.loc[0]['CDELT1']*1
 print("dx = .{}".format(dx))
 
+###########################################################################################
+# Set Cone
+n_puntos=100
+ang_inc=3.0
+print('centro = {}, {}'.format(xc,yc))
+
+# radio inicial y final
+if maph.loc[0].DETECTOR == 'COR2': #para stereo
+    rrin=3
+    rrfin=15
+else:
+    rrin=6
+    rrfin=15
+rrin
+
+# funcion para dibujar x, y del cono (angulo principal, espacio direcciones, numero de direcciones)
+def setAngle(angulo, ang_inc, gap):
+    gap_angle = np.arange(gap*(-1),gap+1)
+    rr=rrt=np.zeros((1+gap*2,2,n_puntos),dtype=int)
+    PA_m = angulo + 90
+    rsol = r0
+    index = np.arange(100)
+    rads = np.linspace(rrin,rrfin,100)
+    radios = np.zeros(n_puntos)
+    for j in gap_angle:
+        for i in index:
+            rd = rads[i]
+            radios[i] = rd
+            radio=rsol * rd
+            teta = (PA_m + ang_inc * j)*np.pi/180
+            x = radio * np.cos(teta) + xc
+            y = radio * np.sin(teta) + yc
+            if x < 0 or y < 0:
+                print(i, x, y)
+            rr[j+gap][0][i]=x
+            rr[j+gap][1][i]=y
+    return rr
+
+rr = setAngle(80,3,5)
+print(rr.shape)
+
