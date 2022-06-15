@@ -168,3 +168,10 @@ def setAngle(angulo, ang_inc, gap):
 rr = setAngle(80,3,5)
 print(rr.shape)
 
+# Librerias para iterar colores xd
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
+import matplotlib.cm as mplcm
+import matplotlib.colors as colors
+# Dar formato a las fechas en formato datatime
+from matplotlib import dates as mpl_dates
