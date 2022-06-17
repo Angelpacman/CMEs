@@ -200,3 +200,43 @@ for i in range(tama):
         for k in range(100):
             output_py[i][j][k]  = map_s[     i  ][ rr[j,1,k] ][ rr[j,0,k] ]
             #output_idl[i][j][k] = s_idl[ str(i) ][ rr[j,1,k] ][ rr[j,0,k] ]
+
+# Esta variable se usa para tomar manualmente indices para definir tiempo de background
+indtbkg = np.arange(25,44)
+
+# Salida del cono
+def salidaCono():
+    global output
+    output=fltarr(n_puntos,rr.shape[0],tama)
+    for i in range(tama):
+        for j in range(rr.shape[0]):
+            for k in range(100):
+                output[i][j][k]  = map_s[     i  ][ rr[j,1,k] ][ rr[j,0,k] ]
+
+# obtener el error en un arreglo
+def backgroundError():
+    global den_bg_er, den_bgs_er
+    den_bg_er  = np.zeros((n_puntos,2))
+    den_bgs_er = np.zeros((n_puntos,2))
+    for i in range (n_puntos):
+        den_bg_er[i][0] = np.mean(output.T[i])
+        den_bg_er[i][1] = np.std( output.T[i])
+        den_bgs_er[i][0] = np.mean(output[min(indtbkg):max(indtbkg)].T[i])
+        den_bgs_er[i][1] = np.std( output[min(indtbkg):max(indtbkg)].T[i])
+
+########################################################################################
+# obtener error de manera manual usando output_py
+den_bg_er_py = np.zeros((100,2))
+for i in range(n_puntos):
+    den_bg_er_py[i][0] = np.mean(output_py.T[i])
+    den_bg_er_py[i][1] = np.std(output_py.T[i])
+
+# 
+den_bgs_er=np.zeros((n_puntos,2))  #la den y el sigma de la den del background
+for i in range(n_puntos):
+    #den_bgs_er[i][0] = np.mean(output_py.T[i][:][min(indtbkg):max(indtbkg)])
+    #den_bgs_er[i][1] = np.std( output_py.T[i][:][min(indtbkg):max(indtbkg)])
+    den_bgs_er[i][0] = np.mean(output_py[ min(indtbkg):max(indtbkg) ].T[ i ])
+    den_bgs_er[i][1] = np.std( output_py[ min(indtbkg):max(indtbkg) ].T[ i ])
+#den_bgs_er
+#######################################################################################
