@@ -175,3 +175,12 @@ import matplotlib.cm as mplcm
 import matplotlib.colors as colors
 # Dar formato a las fechas en formato datatime
 from matplotlib import dates as mpl_dates
+
+
+# Constantes
+rSolarcsec=32*60
+disterr=56./1920./2. ##mitad de la minima escala en Rs para LASCO C3
+if (maph['DETECTOR'][0] == 'COR2'):
+    disterr = maph['CDELT1'][0]/rSolarcsec/2
+radios = np.linspace(rrin,rrfin,100)
+derr= disterr*radios**2
