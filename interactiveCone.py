@@ -105,3 +105,82 @@ print("r0_19 = {}".format(r0_19))
 print("r0_15 = {}".format(r0_15))
 print("r0_10 = {}".format(r0_10))
 
+# Deal with times
+df_tiempo=pd.to_datetime(maph['DATE-OBS'])
+df_tiempo.head()
+
+tiempos = [maph['DATE-OBS']]
+header = ["DATE-OBS"]
+df_tiempo = pd.concat(tiempos, axis = 1, keys = header)
+df_tiempo.head()
+
+tiempos=pd.to_datetime(df_tiempo['DATE-OBS'])
+t0 = tiempos[0] # Esto fallará si se filtro el FITfile con el indice 0
+delta = []
+for celda in tiempos:
+    delta.append((celda - t0).total_seconds())
+print("Seconds on the array delta from zero to final: ")
+delta
+
+df_tiempo['SECONDS'] = delta
+df_tiempo.head()
+dx = maph.loc[0]['CDELT1']*1
+print("dx = .{}".format(dx))
+
+###########################################################################################
+# Set Cone
+n_puntos=100
+ang_inc=3.0
+print('centro = {}, {}'.format(xc,yc))
+
+# radio inicial y final
+if maph.loc[0].DETECTOR == 'COR2': #para stereo
+    rrin=3
+    rrfin=15
+else:
+    rrin=6
+    rrfin=15
+rrin
+
+# funcion para dibujar x, y del cono (angulo principal, espacio direcciones, numero de direcciones)
+def setAngle(angulo, ang_inc, gap):
+    gap_angle = np.arange(gap*(-1),gap+1)
+    rr=rrt=np.zeros((1+gap*2,2,n_puntos),dtype=int)
+    PA_m = angulo + 90
+    rsol = r0
+    index = np.arange(100)
+    rads = np.linspace(rrin,rrfin,100)
+    radios = np.zeros(n_puntos)
+    for j in gap_angle:
+        for i in index:
+            rd = rads[i]
+            radios[i] = rd
+            radio=rsol * rd
+            teta = (PA_m + ang_inc * j)*np.pi/180
+            x = radio * np.cos(teta) + xc
+            y = radio * np.sin(teta) + yc
+            if x < 0 or y < 0:
+                print(i, x, y)
+            rr[j+gap][0][i]=x
+            rr[j+gap][1][i]=y
+    return rr
+
+rr = setAngle(80,3,5)
+print(rr.shape)
+
+# Librerias para iterar colores xd
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
+import matplotlib.cm as mplcm
+import matplotlib.colors as colors
+# Dar formato a las fechas en formato datatime
+from matplotlib import dates as mpl_dates
+
+
+# Constantes
+rSolarcsec=32*60
+disterr=56./1920./2. ##mitad de la minima escala en Rs para LASCO C3
+if (maph['DETECTOR'][0] == 'COR2'):
+    disterr = maph['CDELT1'][0]/rSolarcsec/2
+radios = np.linspace(rrin,rrfin,100)
+derr= disterr*radios**2
