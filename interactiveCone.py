@@ -184,3 +184,19 @@ if (maph['DETECTOR'][0] == 'COR2'):
     disterr = maph['CDELT1'][0]/rSolarcsec/2
 radios = np.linspace(rrin,rrfin,100)
 derr= disterr*radios**2
+
+# Tomar valores para el cono dibujado
+def fltarr(a,b,c):
+    """
+    FLTARR(a, b, c)    -> np.zeros((c, b, a))
+    """        
+    return np.zeros((c,b,a))
+
+output_py=fltarr(n_puntos,rr.shape[0],tama) ## con el cambio en la dir radial
+#output_idl=fltarr(n_puntos,rr.shape[0],tama) ## con el cambio en la dir radial
+
+for i in range(tama):
+    for j in range(rr.shape[0]):
+        for k in range(100):
+            output_py[i][j][k]  = map_s[     i  ][ rr[j,1,k] ][ rr[j,0,k] ]
+            #output_idl[i][j][k] = s_idl[ str(i) ][ rr[j,1,k] ][ rr[j,0,k] ]
