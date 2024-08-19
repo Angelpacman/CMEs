@@ -1,3 +1,4 @@
+from __future__ import print_function
 from astropy.io import fits
 import numpy as np
 import datetime
@@ -240,3 +241,66 @@ for i in range(n_puntos):
     den_bgs_er[i][1] = np.std( output_py[ min(indtbkg):max(indtbkg) ].T[ i ])
 #den_bgs_er
 #######################################################################################
+
+# Librerias para widgets
+from ipywidgets import interact, interactive, fixed, interact_manual
+import ipywidgets as widgets
+
+def direcciones(pa,delta,imagen):
+    global rr 
+    rr = setAngle(pa,delta,5)
+    salidaCono()
+    backgroundError()
+    radios = np.linspace(3,15,100)
+    fig = plt.figure(figsize = (18,6))
+    ax = fig.add_subplot(1, 1, 1)
+    dic_radios={}
+    NUM_COLORS = len(rr)
+    cm = plt.get_cmap('seismic')
+    cNorm  = colors.Normalize(vmin=0, vmax=NUM_COLORS-1)
+    scalarMap = mplcm.ScalarMappable(norm=cNorm, cmap=cm)
+
+    for radio in range(len(rr)):
+        valorRadioCentral = np.array([])
+        for indice in range(len(listaDatosFiltrados)):
+            mapa_temp = map_s[indice]
+            valorRadioCentral = np.append(valorRadioCentral,
+                                          [mapa_temp[ rr[radio,1,0], rr[radio,0,0] ]] )
+        brilloProm = np.mean(valorRadioCentral)
+        valorRadioCentral = valorRadioCentral - brilloProm
+
+        dic_radios["radio_No.%s" %radio]=valorRadioCentral
+        ax.set_prop_cycle(color=[scalarMap.to_rgba(radio)])
+    
+        #graficar
+        ax.plot_date(tiempos,   
+                     dic_radios["radio_No.%s" %radio], 
+                     linestyle='solid',
+                     label='Radio %s' %radio)
+        #plt.xticks(rotation=45,
+        #           ha='right')
+        plt.ylim([-80,90])
+
+    #iteración de colores
+    ax.grid(color = "#242326")
+    ax.legend(ncol=2)
+    ax.set_facecolor('#2f2f2f')
+    plt.ylabel("Brillo - $\mu_{brillo}$")
+    date_format = mpl_dates.DateFormatter('%H:%M \n%d-%b-%Y')
+    plt.gca().xaxis.set_major_formatter(date_format)
+    
+    ax1 = fig.add_subplot(2, 5, 4)
+    datatemp_dif = map_s[imagen] - map_s[imagen-1]
+    normalized_data = preprocessing.normalize(datatemp_dif, norm="max")
+    im, norm = imshow_norm(normalized_data, ax1, origin='lower', cmap='gray')
+    for j in np.arange(len(rr)):
+        ax1.set_prop_cycle(color = [scalarMap.to_rgba(j)])
+        ax1.plot( rr[j,0,:], rr[j,1,:], ":")
+    plt.show()
+
+interact(direcciones,
+         pa    = widgets.IntSlider(min=0,max=360,step=1, value=80),
+         delta = widgets.IntSlider(min=0,max=5,step=1, value=3),
+         imagen = widgets.IntSlider(min=2,max=len(map_s)-1,step=1, value=30))
+
+#########################################################################################
